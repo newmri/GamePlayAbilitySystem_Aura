@@ -3,3 +3,18 @@
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 
+void UAuraAbilitySystemComponent::AbilityActorInfoSet()
+{
+	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UAuraAbilitySystemComponent::EffectApllied);
+}
+
+void UAuraAbilitySystemComponent::EffectApllied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle)
+{
+	FGameplayTagContainer TagContainer;
+	EffectSpec.GetAllAssetTags(TagContainer);
+	for (const auto& Tag : TagContainer)
+	{
+		const FString Msg = FString::Printf(TEXT("GE Tag %s"), *Tag.ToString());
+		GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Blue, Msg);
+	}
+}
