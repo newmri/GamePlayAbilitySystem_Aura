@@ -18,7 +18,7 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Attributes_Secondary_Armor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Atributes.Secondary.Armor"));
 	GameplayTags.Attributes_Secondary_ArmorPenetration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Atributes.Secondary.ArmorPenetration"));
 	GameplayTags.Attributes_Secondary_BlockChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Atributes.Secondary.BlockChance"));
-	GameplayTags.Attributes_Secondary_CriticalHitChange = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Atributes.Secondary.CriticalHitChange"));
+	GameplayTags.Attributes_Secondary_CriticalHitChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Atributes.Secondary.CriticalHitChance"));
 	GameplayTags.Attributes_Secondary_CriticalHitDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Atributes.Secondary.CriticalHitDamage"));
 	GameplayTags.Attributes_Secondary_CriticalHitResistance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Atributes.Secondary.CriticalHitResistance"));
 	GameplayTags.Attributes_Secondary_HealthRegeneration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Atributes.Secondary.HealthRegeneration"));

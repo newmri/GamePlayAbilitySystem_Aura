@@ -26,7 +26,7 @@ public:
 	FGameplayTag Attributes_Secondary_Armor;
 	FGameplayTag Attributes_Secondary_ArmorPenetration;
 	FGameplayTag Attributes_Secondary_BlockChance;
-	FGameplayTag Attributes_Secondary_CriticalHitChange;
+	FGameplayTag Attributes_Secondary_CriticalHitChance;
 	FGameplayTag Attributes_Secondary_CriticalHitDamage;
 	FGameplayTag Attributes_Secondary_CriticalHitResistance;
 	FGameplayTag Attributes_Secondary_HealthRegeneration;
