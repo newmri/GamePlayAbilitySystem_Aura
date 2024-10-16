@@ -13,6 +13,9 @@
  	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
  	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+
+DECLARE_DELEGATE_RetVal(FGameplayAttribute, FAttributeSignature);
+
 struct FGameplayEffectModCallbackData;
 
 USTRUCT()
@@ -63,14 +66,16 @@ public:
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
+	TMap<FGameplayTag, FAttributeSignature> TagsToAttributes;
+
 	// Primary
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Strength, Category = "Primary Attributes")
 	FGameplayAttributeData Strength;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Strength)
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Inteligence, Category = "Primary Attributes")
-	FGameplayAttributeData Inteligence;
-	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Inteligence)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Intelligence, Category = "Primary Attributes")
+	FGameplayAttributeData Intelligence;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Intelligence)
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Resilience, Category = "Primary Attributes")
 	FGameplayAttributeData Resilience;
@@ -135,7 +140,7 @@ public:
 	void OnRep_Strength(const FGameplayAttributeData& OldStrength) const;
 
 	UFUNCTION()
-	void OnRep_Inteligence(const FGameplayAttributeData& OldInteligence) const;
+	void OnRep_Intelligence(const FGameplayAttributeData& OldInteligence) const;
 
 	UFUNCTION()
 	void OnRep_Resilience(const FGameplayAttributeData& OldResilience) const;

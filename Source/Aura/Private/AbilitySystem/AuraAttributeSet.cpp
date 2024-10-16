@@ -6,10 +6,19 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include <Net/UnrealNetwork.h>
 #include "GameFramework/Character.h"
+#include "AuraGameplayTags.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
+	const auto& GameplayTags = FAuraGameplayTags::Get();
 
+	FAttributeSignature StrengthDelegate;
+	StrengthDelegate.BindStatic(GetStrengthAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Primary_Strength, StrengthDelegate);
+
+	FAttributeSignature IntelligenceDelegate;
+	IntelligenceDelegate.BindStatic(GetIntelligenceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Primary_Intelligence, IntelligenceDelegate);
 }
 
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -19,7 +28,7 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 
 	// Primary
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Strength, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Inteligence, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Resilience, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
 
@@ -76,9 +85,9 @@ void UAuraAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Strength, OldStrength);
 }
 
-void UAuraAttributeSet::OnRep_Inteligence(const FGameplayAttributeData& OldInteligence) const
+void UAuraAttributeSet::OnRep_Intelligence(const FGameplayAttributeData& OldInteligence) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Inteligence, OldInteligence);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Intelligence, OldInteligence);
 }
 
 void UAuraAttributeSet::OnRep_Resilience(const FGameplayAttributeData& OldResilience) const
