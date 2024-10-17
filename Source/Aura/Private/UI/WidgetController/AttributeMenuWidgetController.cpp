@@ -4,10 +4,20 @@
 #include "UI/WidgetController/AttributeMenuWidgetController.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/AttributeInfo.h"
-#include "AuraGameplayTags.h"
 
 void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 {
+	auto AS = CastChecked<UAuraAttributeSet>(AttributeSet);
+
+	for (auto& d : AS->TagsToAttributes)
+	{
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(d.Value()).AddLambda(
+			[this, d](const FOnAttributeChangeData& Data)
+			{
+				BroadcastAttributgeInfo(d.Key, d.Value());
+			}
+		);
+	}
 }
 
 void UAttributeMenuWidgetController::BroadcastInitialValues()
@@ -18,11 +28,13 @@ void UAttributeMenuWidgetController::BroadcastInitialValues()
 
 	for (auto& d : AS->TagsToAttributes)
 	{
-		auto Info = AttributeInfo->FindAttributeInfoForTag(d.Key);
-		auto Attr = d.Value.Execute();
-		Info.AttributeValue = Attr.GetNumericValue(AttributeSet);
-		AttributeInfoDelegate.Broadcast(Info);
+		BroadcastAttributgeInfo(d.Key, d.Value());
 	}
+}
 
-
+void UAttributeMenuWidgetController::BroadcastAttributgeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const
+{
+	auto Info = AttributeInfo->FindAttributeInfoForTag(AttributeTag);
+	Info.AttributeValue = Attribute.GetNumericValue(AttributeSet);
+	AttributeInfoDelegate.Broadcast(Info);
 }
