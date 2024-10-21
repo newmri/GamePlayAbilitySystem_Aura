@@ -8,8 +8,11 @@
 void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+}
 
-	const auto bIsServer = HasAuthority(&ActivationInfo);
+void UAuraProjectileSpell::SpawnProjectile()
+{
+	const auto bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (false == bIsServer)
 	{
 		return;
