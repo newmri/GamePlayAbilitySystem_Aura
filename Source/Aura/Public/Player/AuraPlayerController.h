@@ -26,7 +26,7 @@ public:
 	virtual void PlayerTick(float DeltaTime) override;
 
 	UFUNCTION(Client, Reliable)
-	void ShowDamageNumber(float Damage, ACharacter* TargetCharacter);
+	void ShowDamageNumber(float Damage, bool bBlockedHit, bool bCriticalHit, ACharacter* TargetCharacter);
 
 protected:
 	virtual void BeginPlay() override;
