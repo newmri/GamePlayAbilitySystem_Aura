@@ -65,7 +65,13 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	EvaluationParameters.TargetTags = TargetTags;
 
 	// Get Damage Set By Caller Magnitude
-	float Damage = Spec.GetSetByCallerMagnitude(FAuraGameplayTags::Get().Damage);
+	float Damage = 0;
+	for (const auto& d : FAuraGameplayTags::Get().DamageTypesToResistances)
+	{
+		const auto DamageTypeValue = Spec.GetSetByCallerMagnitude(d.Key);
+		Damage += DamageTypeValue;
+	}
+
 
 	// Capture BlockChange on Target, and determine if there was a successful Block
 	float TargetBlockChance = 0.f;
@@ -124,6 +130,15 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 
 	// Double damage plus a bonus if critical hit
 	Damage = bCriticalHit ? 2.f * Damage + SourceCriticalHitDamage : Damage;
+
+	if (10.f > Damage)
+	{
+		Damage += FMath::RandRange(0.f, 3.f);
+	}
+	else
+	{
+		Damage += Damage * FMath::RandRange(0.01, 0.1);
+	}
 
 	FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
