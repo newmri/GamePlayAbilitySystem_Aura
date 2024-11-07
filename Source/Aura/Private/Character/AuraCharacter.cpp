@@ -34,6 +34,9 @@ void AAuraCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 
+	auto Connection = GetNetConnection();
+	if (Connection) Connection->SetAutoFlush(true);
+
 	// For Client
 	InitAbilityActorInfo();
 }
