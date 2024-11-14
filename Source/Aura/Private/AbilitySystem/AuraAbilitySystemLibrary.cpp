@@ -11,6 +11,7 @@
 #include "Game/AuraGameModeBase.h"
 #include "AbilitySystemComponent.h"
 #include "AuraAbilityTypes.h"
+#include "Interaction/CombatInterface.h"
 
 UOverlayWidgetController* UAuraAbilitySystemLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
 {
@@ -82,7 +83,7 @@ void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data.Get());
 }
 
-void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
+void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, ECharacterClass CharacterClass)
 {
 	auto CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
 	if (nullptr == CharacterClassInfo)
@@ -94,6 +95,16 @@ void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContext
 	{
 		auto AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
 		ASC->GiveAbility(AbilitySpec);
+	}
+
+	const auto& DefaultInfo = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
+	for (auto AbilityClass : DefaultInfo.StartupAbilites)
+	{
+		if (auto CombatInterface = Cast<ICombatInterface>(ASC->GetAvatarActor()))
+		{
+			auto AbilitySpec = FGameplayAbilitySpec(AbilityClass, CombatInterface->GetPlayerLevel());
+			ASC->GiveAbility(AbilitySpec);
+		}
 	}
 }
 
