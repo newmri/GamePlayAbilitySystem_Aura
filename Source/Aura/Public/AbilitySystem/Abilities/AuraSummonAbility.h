@@ -24,6 +24,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Summoning")
 	TArray<TSubclassOf<APawn>> MinionClasses;
 
+	UFUNCTION(BlueprintPure, Category="Summoning")
+	TSubclassOf<APawn> GetRandomMinionClass();
+	
 	UPROPERTY(EditDefaultsOnly, Category="Summoning")
 	float MinSpawnDistance = 150.f;
 	UPROPERTY(EditDefaultsOnly, Category="Summoning")
@@ -31,4 +34,5 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category="Summoning")
 	float SpawnSpread = 90.f;
+	
 };
