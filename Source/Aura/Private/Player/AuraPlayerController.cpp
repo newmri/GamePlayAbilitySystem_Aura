@@ -139,11 +139,6 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		return;
 	}
 
-	if (GetASC())
-	{
-		GetASC()->AbilityInputTagHeld(InputTag);
-	}
-
 	if (false == bTargeting && false == bShiftKeyDown)
 	{
 		auto ControlledPawn = GetPawn();
@@ -169,6 +164,10 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 		FollowTime = 0.f;
 		bTargeting = false;
+	}
+	else if (GetASC())
+	{
+		GetASC()->AbilityInputTagHeld(InputTag);
 	}
 }
 
