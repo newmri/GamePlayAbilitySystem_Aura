@@ -83,7 +83,7 @@ protected:
 
 	virtual void InitializeDefaultAttributes() const;
 
-	void AddCharacterAbilites();
+	void AddCharacterAbilities();
 
 	void Dissolve();
 

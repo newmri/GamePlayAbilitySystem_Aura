@@ -158,7 +158,7 @@ void AAuraCharacterBase::InitializeDefaultAttributes() const
 	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
 }
 
-void AAuraCharacterBase::AddCharacterAbilites()
+void AAuraCharacterBase::AddCharacterAbilities()
 {
 	auto AuraASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
 
@@ -167,7 +167,7 @@ void AAuraCharacterBase::AddCharacterAbilites()
 		return;
 	}
 
-	AuraASC->AddCharacterAbilites(StartupAbilites);
+	AuraASC->AddCharacterAbilities(StartupAbilites);
 }
 
 void AAuraCharacterBase::Dissolve()

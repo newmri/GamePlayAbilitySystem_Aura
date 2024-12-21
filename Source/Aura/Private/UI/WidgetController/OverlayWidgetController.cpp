@@ -48,21 +48,37 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 		}
 	);
 
-	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
-		[this](const FGameplayTagContainer& AssetTags)
-		{
-			for (const auto& Tag : AssetTags)
+	if (auto AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
+	{
+		if (AuraASC->bStartupAbilitiesGiven)
+			OnInitializeStartupAbilities(AuraASC);
+		else
+			AuraASC->AbilitiesGivenDelegate.AddUObject(this, &UOverlayWidgetController::OnInitializeStartupAbilities);
+	
+		AuraASC->EffectAssetTags.AddLambda(
+			[this](const FGameplayTagContainer& AssetTags)
 			{
-				auto MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
-
-				if (false == Tag.MatchesTag(MessageTag))
+				for (const auto& Tag : AssetTags)
 				{
-					continue;
-				}
+					auto MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
 
-				auto Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
-				MessageWidgetRowDelegate.Broadcast(*Row);
+					if (false == Tag.MatchesTag(MessageTag))
+					{
+						continue;
+					}
+
+					auto Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
+					MessageWidgetRowDelegate.Broadcast(*Row);
+				}
 			}
-		}
-	);
+		);
+	}
+}
+
+void UOverlayWidgetController::OnInitializeStartupAbilities(UAuraAbilitySystemComponent* AuraAbilitySystemComponent)
+{
+	if (!AuraAbilitySystemComponent->bStartupAbilitiesGiven)
+		return;
+
+	//TODO Get Information about all given abilities
 }
