@@ -97,15 +97,28 @@ FGameplayTag UAuraAbilitySystemComponent::GetAbilityTagFromSpec(const FGameplayA
 
 FGameplayTag UAuraAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
 {
-	for (auto Tag : AbilitySpec.DynamicAbilityTags)
+	static const FGameplayTag InputTag = FGameplayTag::RequestGameplayTag(FName("InputTag"));
+    
+	for (const auto& Tag : AbilitySpec.DynamicAbilityTags)
 	{
-		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("InputTag"))))
+		if (Tag.MatchesTag(InputTag))
 		{
 			return Tag;
 		}
 	}
 
 	return FGameplayTag();
+}
+
+void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
+{
+	Super::OnRep_ActivateAbilities();
+
+	if (!bStartupAbilitiesGiven)
+	{
+		bStartupAbilitiesGiven = true;
+		AbilitiesGivenDelegate.Broadcast(this);
+	}
 }
 
 void UAuraAbilitySystemComponent::ClientEffectApllied_Implementation(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle)

@@ -4,9 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
-#include "AuraAbilitySystemComponent.h"
-#include "AuraAbilitySystemComponent.h"
-#include "AuraAbilitySystemComponent.h"
 #include "AuraAbilitySystemComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer& /* AssetTags */)
@@ -38,6 +35,8 @@ public:
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	
 protected:
+	virtual void OnRep_ActivateAbilities() override;
+	
 	UFUNCTION(Client, Reliable)
 	void ClientEffectApllied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
 };
