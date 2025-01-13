@@ -113,8 +113,11 @@ protected:
 	ECharacterClass CharacterClass = ECharacterClass::Warrior;
 private:
 	UPROPERTY(EditAnywhere, Category="Abilites")
-	TArray<TSubclassOf<UGameplayAbility>> StartupAbilites;
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 
+	UPROPERTY(EditAnywhere, Category="Abilites")
+	TArray<TSubclassOf<UGameplayAbility>> StartupPassiveAbilities;
+	
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
 };
