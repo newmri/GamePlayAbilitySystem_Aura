@@ -105,11 +105,12 @@ void UOverlayWidgetController::OnXPChanged(int32 NewXP) const
 	
 	auto Level = LevelUpInfo->FindLevelForXP(NewXP);
 	auto MaxLevel = LevelUpInfo->LevelUpInfo.Num() + 1;
-
-	if (Level <= MaxLevel && Level > 1)
+	
+	if (Level <= MaxLevel && Level >= 1)
 	{
-		const auto LevelUpRequirement = LevelUpInfo->LevelUpInfo[Level - 2].LevelUpRequirement;
-		const auto PreviousLevelUpRequirement = Level >= 3 ? LevelUpInfo->LevelUpInfo[Level - 3].LevelUpRequirement : 0;
+		int32 LevelUpInfoIndex = Level - 1;
+		const auto LevelUpRequirement = LevelUpInfo->LevelUpInfo[LevelUpInfoIndex].LevelUpRequirement;
+		const auto PreviousLevelUpRequirement = Level >= 2 ? LevelUpInfo->LevelUpInfo[Level - 2].LevelUpRequirement : 0;
 
 		const auto DeltaLevelRequirement = LevelUpRequirement - PreviousLevelUpRequirement;
 		const auto XPForThisLevel = NewXP - PreviousLevelUpRequirement;
