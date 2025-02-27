@@ -261,7 +261,7 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 		const auto bStatusValid = Status == GameplayTags.Abilities_Status_Equipped || Status == GameplayTags.Abilities_Status_Unlocked;
 		if (bStatusValid)
 		{
-			ClearAbilitiesOfSlot(PrevSlot);
+			ClearAbilitiesOfSlot(Slot);
 			ClearSlot(AbilitySpec);
 
 			AbilitySpec->DynamicAbilityTags.AddTag(Slot);
@@ -273,7 +273,15 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 
 			MarkAbilitySpecDirty(*AbilitySpec);
 		}
+
+		ClientEquipAbility(AbilityTag, GameplayTags.Abilities_Status_Equipped, Slot, PrevSlot);
 	}
+}
+
+void UAuraAbilitySystemComponent::ClientEquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& Status,
+	const FGameplayTag& Slot, const FGameplayTag& PreviousSlot)
+{
+	AbilityEquippedDelegate.Broadcast(AbilityTag, Status, Slot, PreviousSlot);
 }
 
 void UAuraAbilitySystemComponent::ClearSlot(FGameplayAbilitySpec* AbilitySpec)
