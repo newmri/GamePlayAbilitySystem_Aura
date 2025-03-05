@@ -3,6 +3,8 @@
 #include "GameplayEffectTypes.h"
 #include "AuraAbilityTypes.generated.h"
 
+class UGameplayEffect;
+
 USTRUCT(BlueprintType)
 struct FDamageEffectParams
 {
