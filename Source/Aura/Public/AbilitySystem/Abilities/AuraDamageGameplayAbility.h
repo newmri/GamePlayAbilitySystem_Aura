@@ -20,6 +20,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CauseDamage(AActor* TargetActor);
 
+	UFUNCTION(BlueprintPure)
 	FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr) const;
 	
 protected:
@@ -47,7 +48,7 @@ protected:
 	float DeathImpulseMagnitude = 1000.f;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Damage")
-	float KnockbackForceMagnitude = 1000.f;
+	float KnockbackForceMagnitude = 500.f;
 
 	UPROPERTY(EditDefaultsOnly, Category="Damage")
 	float KnockbackChance = 0.f;
