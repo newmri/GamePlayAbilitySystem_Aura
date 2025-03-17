@@ -4,6 +4,8 @@
 #include "AbilitySystem/Abilities/AuraFireBolt.h"
 
 #include "PrimitiveSceneInfo.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "Actor/AuraProjectile.h"
 #include "Aura/Public/AuraGameplayTags.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -100,24 +102,24 @@ void UAuraFireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, co
 			Rotation.Pitch = PitchOverride;
 
 		const auto Forward = Rotation.Vector();
-		const auto LeftOfSpread = Forward.RotateAngleAxis(-ProjectileSpread / 2.f, FVector::UpVector);
-		const auto RightOfSpread = Forward.RotateAngleAxis(ProjectileSpread / 2.f, FVector::UpVector);
-		const auto Start = SocketLocation + FVector(0, 0, 5);
 
-		//const int32 NumOfProjectiles = FMath::Min(MaxNumProjectiles, GetAbilityLevel());
-		const int32 NumOfProjectiles = NumProjectiles;
-		if (NumOfProjectiles > 1)
+		auto Rotations = UAuraAbilitySystemLibrary::EvenlySpacedRotators(Forward, FVector::UpVector, ProjectileSpread, NumProjectiles);
+		
+		for (auto& Rot : Rotations)
 		{
-			const auto DeltaSpread = ProjectileSpread / (NumOfProjectiles - 1);
-			for (int32 i = 0; i < NumOfProjectiles; ++i)
-			{
-				const auto Direction = LeftOfSpread.RotateAngleAxis(i * DeltaSpread, FVector::UpVector);
-				UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), Start, Start + Direction * 75.f, 5, FLinearColor::White, 60, 1);
-			}
-		}
-		else
-		{
-			UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), Start, Start + Forward * 75.f, 5, FLinearColor::White, 60, 1);
+			FTransform SpawnTransform;
+			SpawnTransform.SetLocation(SocketLocation);
+			SpawnTransform.SetRotation(Rot.Quaternion());
+
+			auto Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(ProjectileClass,
+			SpawnTransform,
+			GetOwningActorFromActorInfo(),
+			Cast<APawn>(GetOwningActorFromActorInfo()),
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+			Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+		
+			Projectile->FinishSpawning(SpawnTransform);
 		}
 	}
 }
