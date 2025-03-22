@@ -118,6 +118,8 @@ void AAuraPlayerController::CursorTrace()
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
+	if (GetASC()) GetASC()->AbilityInputTagPressed(InputTag);
+
 	if (false == InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
 		return;

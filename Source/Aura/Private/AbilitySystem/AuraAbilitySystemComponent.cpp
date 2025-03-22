@@ -44,6 +44,27 @@ void UAuraAbilitySystemComponent::AddCharacterPassiveAbilities(
 	}
 }
 
+void UAuraAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)
+{
+	if (false == InputTag.IsValid())
+	{
+		return;
+	}
+
+	for (auto& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+		{
+			AbilitySpecInputPressed(AbilitySpec);
+
+			if (AbilitySpec.IsActive())
+			{
+				InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
+			}
+		}
+	}
+}
+
 void UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
 {
 	if (false == InputTag.IsValid())
@@ -75,12 +96,10 @@ void UAuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& In
 
 	for (auto& AbilitySpec : GetActivatableAbilities())
 	{
-		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag) && AbilitySpec.IsActive())
 		{
-			if (false == AbilitySpec.IsActive())
-			{
-				AbilitySpecInputPressed(AbilitySpec);
-			}
+			AbilitySpecInputPressed(AbilitySpec);
+			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
 		}
 	}
 }
