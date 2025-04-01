@@ -51,6 +51,9 @@ public:
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TArray<FTaggedMontage> AttackMontage;
 
+	UPROPERTY(Replicated, BluePrintReadWrite)
+	bool bIsStunned = false;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -71,6 +74,11 @@ protected:
 	
 	bool bDead = false;
 
+	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
+	float BaseWalkSpeed = 600.f;
+	
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 

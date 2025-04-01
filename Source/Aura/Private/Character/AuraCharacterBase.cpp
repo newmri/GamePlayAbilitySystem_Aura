@@ -10,6 +10,7 @@
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -69,6 +70,13 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& Deat
 	Dissolve();
 	bDead = true;
 	OnDeath.Broadcast(this);
+}
+
+void AAuraCharacterBase::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	bIsStunned = NewCount > 0;
+
+	GetCharacterMovement()->MaxWalkSpeed = bIsStunned ? 0.f : BaseWalkSpeed;
 }
 
 void AAuraCharacterBase::BeginPlay()

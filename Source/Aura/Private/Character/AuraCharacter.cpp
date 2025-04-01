@@ -2,6 +2,8 @@
 
 
 #include "Character/AuraCharacter.h"
+
+#include "AuraGameplayTags.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/AuraPlayerState.h"
 #include "Player/AuraPlayerController.h"
@@ -158,6 +160,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 	OnAscRegistered.Broadcast(AbilitySystemComponent);
+	AbilitySystemComponent->RegisterGameplayTagEvent(FAuraGameplayTags::Get().Debuff_Stun, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AAuraCharacter::StunTagChanged);
 	
 	if (auto AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
 	{
