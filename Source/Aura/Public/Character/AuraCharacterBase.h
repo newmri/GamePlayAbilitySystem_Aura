@@ -23,7 +23,8 @@ class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInte
 
 public:
 	AAuraCharacterBase();
-
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
@@ -51,9 +52,12 @@ public:
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TArray<FTaggedMontage> AttackMontage;
 
-	UPROPERTY(Replicated, BluePrintReadWrite)
+	UPROPERTY(ReplicatedUsing=OnRep_Stunned, BluePrintReadWrite)
 	bool bIsStunned = false;
 
+	UFUNCTION()
+	virtual void OnRep_Stunned();
+	
 protected:
 	virtual void BeginPlay() override;
 
