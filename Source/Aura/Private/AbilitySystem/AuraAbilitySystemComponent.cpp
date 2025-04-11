@@ -222,8 +222,8 @@ bool UAuraAbilitySystemComponent::IsPassiveAbility(const FGameplayAbilitySpec& S
 {
 	auto AbilityInfo = UAuraAbilitySystemLibrary::GetAbilityInfo(GetAvatarActor());
 	const auto AbilityTag = GetAbilityTagFromSpec(Spec);
-	const auto& Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
-	const auto AbilityType = Info.AbilityTag;
+	const auto Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
+	const auto AbilityType = Info.AbilityType;
 	return AbilityType.MatchesTagExact(FAuraGameplayTags::Get().Abilities_Type_Passive);
 }
 
@@ -231,6 +231,12 @@ void UAuraAbilitySystemComponent::AssignSlotToAbility(FGameplayAbilitySpec& Spec
 {
 	ClearSlot(&Spec);
 	Spec.DynamicAbilityTags.AddTag(Slot);
+}
+
+void UAuraAbilitySystemComponent::MulticastActivatePassiveEffect_Implementation(const FGameplayTag& AbilityTag,
+	bool bActivate)
+{
+	ActivatePassiveEffectDelegate.Broadcast(AbilityTag, bActivate);
 }
 
 FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetSpecFromAbilityTag(const FGameplayTag& AbilityTag)
@@ -346,6 +352,7 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 
 					if (IsPassiveAbility(*SpecWithSlot))
 					{
+						MulticastActivatePassiveEffect(GetAbilityTagFromSpec(*SpecWithSlot), false);
 						DeactivatePassiveAbilityDelegate.Broadcast(GetAbilityTagFromSpec(*SpecWithSlot));
 					}
 
@@ -358,6 +365,7 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 				if (IsPassiveAbility(*AbilitySpec))
 				{
 					TryActivateAbility(AbilitySpec->Handle);
+					MulticastActivatePassiveEffect(GetAbilityTagFromSpec(*AbilitySpec), true);
 				}
 			}
 			

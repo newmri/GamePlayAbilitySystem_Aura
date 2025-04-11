@@ -12,6 +12,7 @@ DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&)
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityStatusChanged, const FGameplayTag&, const FGameplayTag&, int32)
 DECLARE_MULTICAST_DELEGATE_FourParams(FAbilityEquipped, const FGameplayTag&, const FGameplayTag&, const FGameplayTag&, const FGameplayTag&)
 DECLARE_MULTICAST_DELEGATE_OneParam(FDeactivatePassiveAbility, const FGameplayTag&)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FActivatePassiveEffect, const FGameplayTag&, bool)
 
 /**
  * 
@@ -29,6 +30,7 @@ public:
 	FAbilityStatusChanged AbilityStatusChangedDelegate;
 	FAbilityEquipped AbilityEquippedDelegate;
 	FDeactivatePassiveAbility DeactivatePassiveAbilityDelegate;
+	FActivatePassiveEffect ActivatePassiveEffectDelegate;
 	
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
 	void AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupPassiveAbilities);
@@ -50,6 +52,9 @@ public:
 	FGameplayAbilitySpec* GetSpecWithSlot(const FGameplayTag& Slot);
 	bool IsPassiveAbility(const FGameplayAbilitySpec& Spec) const;
 	static void AssignSlotToAbility(FGameplayAbilitySpec& Spec, const FGameplayTag& Slot);
+
+	UFUNCTION(NetMulticast, Unreliable)
+	void MulticastActivatePassiveEffect(const FGameplayTag& AbilityTag, bool bActivate);
 	
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
 	
