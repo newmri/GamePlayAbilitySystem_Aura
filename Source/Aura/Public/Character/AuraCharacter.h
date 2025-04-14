@@ -39,7 +39,9 @@ public:
 	virtual void LevelUp_Implementation() override;
 	
 	virtual int32 GetPlayerLevel_Implementation() override;
-
+	virtual void ShowMagicCircle_Implementation(UMaterialInterface* DecalMaterial = nullptr) override;
+	virtual void HideMagicCircle_Implementation() override;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UNiagaraComponent> LevelUpNiagaraComponent;
 
