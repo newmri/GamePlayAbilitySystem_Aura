@@ -234,7 +234,7 @@ bool AAuraCharacterBase::IsBeingShocked_Implementation() const
 
 FOnDamageSignature* AAuraCharacterBase::GetOnDamageSignature()
 {
-	return OnDamageSignature;
+	return &OnDamageSignature;
 }
 
 void AAuraCharacterBase::InitAbilityActorInfo()
