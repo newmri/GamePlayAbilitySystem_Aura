@@ -31,14 +31,21 @@ public:
 	FString LoadSlotName;
 
 	UPROPERTY()
-	FString SlotIndex;
+	int32 SlotIndex;
 
 	UPROPERTY()
 	TEnumAsByte<ESaveSlotStatus> SlotStatus;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter)
-	FString PlayerName;
 
 	void SetPlayerName(FString InPlayerName);
 	FString GetPlayerName() const {return PlayerName;}
+
+	void SetMapName(FString InMapName);
+	FString GetMapName() const {return MapName;}
+	
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess="true"))
+	FString PlayerName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess="true"))
+	FString MapName;
 };
