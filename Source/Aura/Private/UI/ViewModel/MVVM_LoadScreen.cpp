@@ -10,19 +10,21 @@
 void UMVVM_LoadScreen::InitializeLoadSlots()
 {
 	LoadSlot_0 = NewObject<UMVVM_LoadSlot>(this, LoadSlotViewModelClass);
-	LoadSlot_0->LoadSlotName = FString("LoadSlot_0");
+	LoadSlot_0->SetLoadSlotName(FString("LoadSlot_0"));
 	LoadSlot_0->SlotIndex = 0;
 	LoadSlots.Add(LoadSlot_0->SlotIndex, LoadSlot_0);
 	
 	LoadSlot_1 = NewObject<UMVVM_LoadSlot>(this, LoadSlotViewModelClass);
-	LoadSlot_1->LoadSlotName = FString("LoadSlot_1");
+	LoadSlot_1->SetLoadSlotName(FString("LoadSlot_1"));
 	LoadSlot_1->SlotIndex = 1;
 	LoadSlots.Add(LoadSlot_1->SlotIndex, LoadSlot_1);
 	
 	LoadSlot_2 = NewObject<UMVVM_LoadSlot>(this, LoadSlotViewModelClass);
-	LoadSlot_2->LoadSlotName = FString("LoadSlot_2");
+	LoadSlot_2->SetLoadSlotName(FString("LoadSlot_2"));
 	LoadSlot_2->SlotIndex = 2;
 	LoadSlots.Add(LoadSlot_2->SlotIndex, LoadSlot_2);
+
+	SetNumLoadSlots(LoadSlots.Num());
 }
 
 UMVVM_LoadSlot* UMVVM_LoadScreen::GetLoadSlotViewModelByIndex(int32 Index)
@@ -70,7 +72,7 @@ void UMVVM_LoadScreen::DeleteButtonPressed()
 {
 	if (IsValid(SelectedSlot))
 	{
-		AAuraGameModeBase::DeleteSlot(SelectedSlot->LoadSlotName, SelectedSlot->SlotIndex);
+		AAuraGameModeBase::DeleteSlot(SelectedSlot->GetLoadSlotName(), SelectedSlot->SlotIndex);
 		SelectedSlot->SlotStatus = Vacant;
 		SelectedSlot->InitializeSlot();
 		SelectedSlot->EnableSelectSlotButton.Broadcast(true);
@@ -91,7 +93,7 @@ void UMVVM_LoadScreen::LoadData()
 	auto AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
 	for (const auto& LoadSlot : LoadSlots)
 	{
-		auto SaveObject = AuraGameMode->GetSaveSlotData(LoadSlot.Value->LoadSlotName, LoadSlot.Key);
+		auto SaveObject = AuraGameMode->GetSaveSlotData(LoadSlot.Value->GetLoadSlotName(), LoadSlot.Key);
 		const auto PlayerName = SaveObject->PlayerName;
 		const auto SaveSlotStatus = SaveObject->SaveSlotStatus;
 		LoadSlot.Value->SlotStatus = SaveSlotStatus;
@@ -99,4 +101,9 @@ void UMVVM_LoadScreen::LoadData()
 		LoadSlot.Value->SetMapName(SaveObject->MapName);
 		LoadSlot.Value->InitializeSlot();
 	}
+}
+
+void UMVVM_LoadScreen::SetNumLoadSlots(int32 InNumLoadSlots)
+{
+	UE_MVVM_SET_PROPERTY_VALUE(NumLoadSlots, InNumLoadSlots);
 }
