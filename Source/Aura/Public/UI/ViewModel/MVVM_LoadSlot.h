@@ -31,6 +31,9 @@ public:
 	int32 SlotIndex;
 
 	UPROPERTY()
+	FName PlayerStartTag;
+	
+	UPROPERTY()
 	TEnumAsByte<ESaveSlotStatus> SlotStatus;
 
 	void SetPlayerName(FString InPlayerName);
