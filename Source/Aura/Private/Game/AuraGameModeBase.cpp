@@ -50,6 +50,19 @@ void AAuraGameModeBase::DeleteSlot(const FString& SlotName, int32 SlotIndex)
 	}
 }
 
+ULoadScreenSaveGame* AAuraGameModeBase::RetrieveInGameSaveData()
+{
+	auto AuraGameInstance = Cast<UAuraGameInstance>(GetGameInstance());
+	return GetSaveSlotData(AuraGameInstance->LoadSlotName, AuraGameInstance->LoadSlotIndex);
+}
+
+void AAuraGameModeBase::SaveInGameProgressData(ULoadScreenSaveGame* SaveObject)
+{
+	auto AuraGameInstance = Cast<UAuraGameInstance>(GetGameInstance());
+	AuraGameInstance->PlayerStartTag = SaveObject->PlayerStartTag;
+	UGameplayStatics::SaveGameToSlot(SaveObject, AuraGameInstance->LoadSlotName, AuraGameInstance->LoadSlotIndex);
+}
+
 void AAuraGameModeBase::TravelToMap(UMVVM_LoadSlot* Slot)
 {
 	const auto SlotName = Slot->GetLoadSlotName();
