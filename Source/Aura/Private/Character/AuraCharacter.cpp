@@ -11,6 +11,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/Data/LevelUpInfo.h"
 #include "NiagaraComponent.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
 #include "Camera/CameraComponent.h"
@@ -53,7 +54,38 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 
 	// For Server
 	InitAbilityActorInfo();
-	AddCharacterAbilities();
+	LoadProgress();
+}
+
+void AAuraCharacter::LoadProgress()
+{
+	auto AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+	if (AuraGameMode)
+	{
+		auto SaveData = AuraGameMode->RetrieveInGameSaveData();
+		if (nullptr == SaveData)
+			return;
+		
+		if (SaveData->bFirstTimeLoadIn)
+		{
+			InitializeDefaultAttributes();
+			AddCharacterAbilities();
+		}
+		else
+		{
+			//TODO: Load in Abilities from disk
+
+			if (auto AuraPlayerState = Cast<AAuraPlayerState>(GetPlayerState()))
+			{
+				AuraPlayerState->SetLevel(SaveData->PlayerLevel);
+				AuraPlayerState->SetXP(SaveData->XP);
+				AuraPlayerState->SetAttributePoints(SaveData->AttributePoints);
+				AuraPlayerState->SetSpellPoints(SaveData->SpellPoints);
+			}
+
+			UAuraAbilitySystemLibrary::InitializeDefaultAttributesFromSaveData(this, AbilitySystemComponent, SaveData);
+		}
+	}
 }
 
 void AAuraCharacter::OnRep_PlayerState()
@@ -197,7 +229,8 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& CheckpointTag)
 		SaveData->Intelligence = UAuraAttributeSet::GetIntelligenceAttribute().GetNumericValue(GetAttributeSet());
 		SaveData->Resilience = UAuraAttributeSet::GetResilienceAttribute().GetNumericValue(GetAttributeSet());
 		SaveData->Vigor = UAuraAttributeSet::GetVigorAttribute().GetNumericValue(GetAttributeSet());
-		
+
+		SaveData->bFirstTimeLoadIn = false;
 		AuraGameMode->SaveInGameProgressData(SaveData);
 	}
 }
@@ -256,8 +289,6 @@ void AAuraCharacter::InitAbilityActorInfo()
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
-
-	InitializeDefaultAttributes();
 }
 
 void AAuraCharacter::MulticastLevelUpParticles_Implementation() const
