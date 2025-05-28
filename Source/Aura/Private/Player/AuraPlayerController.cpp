@@ -3,7 +3,7 @@
 
 #include "Player/AuraPlayerController.h"
 #include "EnhancedInputSubsystems.h"
-#include "Interaction/EnemyInterface.h"
+#include "Interaction/HighlightInterface.h"
 #include "Input/AuraInputConfig.h"
 #include "Input/AuraInputComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
