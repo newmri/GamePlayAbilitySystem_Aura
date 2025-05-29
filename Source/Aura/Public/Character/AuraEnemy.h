@@ -26,8 +26,8 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 public:
-	virtual void HighlightActor() override;
-	virtual void UnHighlightActor() override;
+	virtual void HighlightActor_Implementation() override;
+	virtual void UnHighlightActor_Implementation() override;
 
 	virtual int32 GetPlayerLevel_Implementation() override;
 	virtual void Die(const FVector& DeathImpulse) override;
