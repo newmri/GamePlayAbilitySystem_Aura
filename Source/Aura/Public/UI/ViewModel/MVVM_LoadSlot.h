@@ -32,6 +32,9 @@ public:
 
 	UPROPERTY()
 	FName PlayerStartTag;
+
+	UPROPERTY()
+	FString MapAssetName;
 	
 	UPROPERTY()
 	TEnumAsByte<ESaveSlotStatus> SlotStatus;
